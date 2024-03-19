@@ -114,7 +114,7 @@ def numerical_relativity_postmerger_waveform(newtime, **waveform_kwargs):
     
     t_0=0
     
-    location =r'C:\Users\Liat\Downloads\HyperBilby-main (2)\HyperBilby-main\gitworkdir\post_meregr\NRtars\THC_0036-master\R01\\'
+    location =r'/Users/ngut0001/Library/CloudStorage/OneDrive-MonashUniversity/HyperBilby-main (2)/HyperBilby-main/gitworkdir/post_meregr/NRtars/THC_0036-master/R01/'
     with h5py.File(location+'data.h5', 'r') as f:
         rh22 = f['rh_22']
         keys = list(rh22.keys())
@@ -275,7 +275,7 @@ def test_model(get_fake_data=False):
 
 
 plt.close('all')
-n_dumped_sin=11
+n_dumped_sin=3
 
 
 result = bilby.result.read_in_result(filename='paul_post_merger_result.json')
@@ -292,7 +292,7 @@ Init_params['A0']=10**best_params['logB'] *best_params['w_0']
 Init_params['A1']=10**best_params['logB'] *best_params['w_1']     
 Init_params['A2']=10**best_params['logB'] *(1-best_params['w_1']-best_params['w_0'])
 Init_params['n_dumped_sin']=3   
-
+Init_params['t0']=0.00 
 
 
 
@@ -398,7 +398,9 @@ waveformNR = bilby.gw.waveform_generator.WaveformGenerator(
 )
 
 
-fname = r'SensitivityCurves\ForJonas\aLIGO_mid_asd.txt'
+fname = r'/Users/ngut0001/Library/CloudStorage/OneDrive-MonashUniversity/HyperBilby-main (2)/HyperBilby-main/gitworkdir/tbilby-sw/tbilby/examples/SensitivityCurves/ForJonas/ET_D_asd.txt' 
+
+
 aLIGO_O3 = np.genfromtxt(fname)
 freq=aLIGO_O3[:,0]
 asd = aLIGO_O3[:,1]
@@ -409,7 +411,7 @@ for ifo in ifos:
     ifo.minimum_frequency = np.min(freq)
     ifo.maximum_frequency = np.max(freq)
     ifo.sampling_frequency = sampling_frequency
-
+    ifo.duration = duration 
 
     ifo.power_spectral_density = bilby.gw.detector.PowerSpectralDensity(
         frequency_array=freq, psd_array=asd**2
@@ -417,10 +419,8 @@ for ifo in ifos:
 
 
 
-
-#ifos.set_strain_data_from_power_spectral_densities(
-#    sampling_frequency=sampling_frequency, duration=duration,
-#    start_time=0)
+    ifos.set_strain_data_from_power_spectral_densities(
+        sampling_frequency=sampling_frequency, duration=duration,start_time=0)
 
 
 #ifos.set_strain_data_from_power_spectral_densities(
@@ -442,6 +442,9 @@ for ifo in ifos:
 strains_model = waveform.frequency_domain_strain(injection_parameters)
 strains_NR = waveformNR.frequency_domain_strain(injection_parameters)
 
+
+
+
 best_params.update(injection_parameters)
 #strains_paul_model =waveform_paul.frequency_domain_strain(best_params)                                    
 
@@ -453,7 +456,7 @@ outdir='outdir'
 label='NEMO_psd'
 ifos.plot_data(outdir=outdir, label=label)
 
-ddd
+
 
 
 const=['A','tau','phi_rad','alpha']
